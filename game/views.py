@@ -4,8 +4,12 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
-from game.constants import (CORRECT_ANS_FEEDBACK, CORRECT_ANS_POINTS,
-                            INCORRECT_ANS_FEEDBACK, INCORRECT_ANS_POINTS)
+from game.constants import (
+    CORRECT_ANS_FEEDBACK,
+    CORRECT_ANS_POINTS,
+    INCORRECT_ANS_FEEDBACK,
+    INCORRECT_ANS_POINTS,
+)
 from game.models import Challenge, Destination
 from users.models import UserProfile
 

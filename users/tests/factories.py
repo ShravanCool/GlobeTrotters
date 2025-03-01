@@ -1,7 +1,6 @@
 import factory
 from django.contrib.auth.models import User
-from factory.django import \
-    DjangoModelFactory  # Factory for creating User objects
+from factory.django import DjangoModelFactory  # Factory for creating User objects
 
 from users.models import UserProfile
 
