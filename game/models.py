@@ -1,3 +1,4 @@
+import random
 from django.db import models
 
 
@@ -13,3 +14,9 @@ class Destination(models.Model):
 
     def __str__(self):
         return f"{self.city}, {self.country}"
+
+    def get_random_fun_fact(self):
+        return random.choice(self.fun_facts)
+
+    def get_random_trivia(self):
+        return random.choice(self.trivia)

@@ -41,6 +41,9 @@ def submit_answer(request):
         else "Incorrect! No points awarded."
     )
 
+    # Get the correct destination
+    destination = Destination.objects.get(city=correct_city)
+
     # Get user profile
     profile, _ = UserProfile.objects.get_or_create(user=request.user)
     if is_ans_correct:
@@ -60,6 +63,8 @@ def submit_answer(request):
             "feedback": feedback,
             "score": profile.score,
             "games_played": profile.games_played,
+            "fun_fact": destination.get_random_fun_fact(),
+            "trivia": destination.get_random_trivia(),
         }
     )
 

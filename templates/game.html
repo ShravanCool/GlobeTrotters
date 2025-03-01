@@ -32,6 +32,8 @@
 <!-- Feedback Banner -->
 <div id="feedbackBanner" class="feedback-banner hidden" style="margin-top: 30px;">
     <p id="feedbackMessage" class="m-0"></p>
+    <p id="funfact" class="m-0"></p>
+    <p id="trivia" class="m-0"></p>
     <button id="next-button" class="btn btn-success mt-3 hidden">Next</button>
 </div>
 
@@ -56,6 +58,8 @@
 
                     // Display feedback with animation
                     $('#feedbackMessage').text(data.feedback);
+                    $('#funfact').text('Fun fact: ' + data.fun_fact);
+                    $('#trivia').text('Another fun fact: ' + data.trivia);
                     $('#feedbackBanner')
                         .removeClass('hidden show-feedback correct-feedback incorrect-feedback')
                         .addClass('show-feedback')
