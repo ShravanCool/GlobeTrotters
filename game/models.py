@@ -1,5 +1,6 @@
 import random
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class Destination(models.Model):
@@ -20,3 +21,18 @@ class Destination(models.Model):
 
     def get_random_trivia(self):
         return random.choice(self.trivia)
+
+
+class Challenge(models.Model):
+    inviter = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="sent_invites"
+    )
+    invitee = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="received_invites",
+    )
+    invite_token = models.CharField(max_length=50, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
