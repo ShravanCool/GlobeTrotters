@@ -25,7 +25,7 @@ def game_view(request):
     request.session.modified = True
 
     context = {
-        "clues": destination.clues,  # Show both clues initially
+        "clues": destination.clues,
         "choices": choices,
     }
     return render(request, "game.html", context)
