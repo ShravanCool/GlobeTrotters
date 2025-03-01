@@ -8,5 +8,8 @@ class Destination(models.Model):
     fun_facts = models.JSONField(default=list)  # Stores exactly 2 fun facts as a list
     trivia = models.JSONField(default=list)  # Stores exactly 2 trivia points as a list
 
+    class Meta:
+        unique_together = ("city", "country")
+
     def __str__(self):
         return f"{self.city}, {self.country}"
