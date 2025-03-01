@@ -21,7 +21,5 @@ from django.urls import path, include
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("game/", include("game.urls")),
-    path(
-        "accounts/", include("django.contrib.auth.urls")
-    ),  # For login/logout if not set up
+    path("accounts/", include("users.urls")),
 ]

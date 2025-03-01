@@ -19,15 +19,27 @@
             </div>
             <ul class="nav navbar-nav navbar-right">
                 {% if user.is_authenticated %}
-                    <li><a href="#">Score: <span id="score">{{ request.session.score }}</span></a></li>
-                    <li><a href="#">Games Played: <span id="games-played">{{ request.session.games_played }}</span></a></li>
-                    <li><a href="/logout/">Logout</a></li>
+                    <li>
+                        <a href="#">Score: <span id="score">{{ request.session.score }}</span></a>
+                    </li>
+                    <li>
+                        <a href="#">Games Played: <span id="games-played">{{ request.session.games_played }}</span></a>
+                    </li>
+                    <li>
+                        <a href="{% url 'logout' %}">Logout ({{ user.username }})</a>
+                    </li>
                 {% else %}
-                    <li><a href="/login/">Login</a></li>
+                    <li>
+                        <a href="{% url 'login' %}">Login</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'signup' %}">Sign Up</a>
+                    </li>
                 {% endif %}
             </ul>
         </div>
     </nav>
+
 
     <div class="container">
         {% block content %}
