@@ -59,5 +59,4 @@ def submit_answer(request):
 
 @login_required
 def play_again(request):
-    request.session["show_second_clue"] = False
     return redirect("game_view")
