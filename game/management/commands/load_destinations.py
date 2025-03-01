@@ -1,8 +1,9 @@
 import json
 import logging
-from django.core.management.base import BaseCommand
-from game.models import Destination
 
+from django.core.management.base import BaseCommand
+
+from game.models import Destination
 
 logger = logging.getLogger(__name__)
 
