@@ -2,7 +2,12 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 import uuid
-from game.constants import CORRECT_ANS_FEEDBACK, INCORRECT_ANS_FEEDBACK
+from game.constants import (
+    CORRECT_ANS_FEEDBACK,
+    INCORRECT_ANS_FEEDBACK,
+    CORRECT_ANS_POINTS,
+    INCORRECT_ANS_POINTS,
+)
 from game.models import Destination, Challenge
 from users.models import UserProfile
 
@@ -44,9 +49,9 @@ def submit_answer(request):
     # Get user profile
     profile, _ = UserProfile.objects.get_or_create(user=request.user)
     if is_ans_correct:
-        profile.increment_score(3)
+        profile.increment_score(CORRECT_ANS_POINTS)
     else:
-        profile.increment_score(0)
+        profile.increment_score(INCORRECT_ANS_POINTS)
 
     profile.refresh_from_db()
 
