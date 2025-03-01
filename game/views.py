@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 import uuid
-import random
+from game.constants import CORRECT_ANS_FEEDBACK, INCORRECT_ANS_FEEDBACK
 from game.models import Destination, Challenge
 from users.models import UserProfile
 
@@ -10,14 +10,10 @@ from users.models import UserProfile
 @login_required
 def game_view(request):
     # Select a random destination
-    destination = random.choice(Destination.objects.all())
+    destination = Destination.get_random_destination()
 
     # Generate multiple-choice options
-    choices = [destination.city] + [
-        d.city
-        for d in random.sample(list(Destination.objects.exclude(id=destination.id)), 3)
-    ]
-    random.shuffle(choices)
+    choices = Destination.get_answer_choices(destination)
 
     # Store the correct answer in the session
     request.session["correct_city"] = destination.city
@@ -37,9 +33,9 @@ def submit_answer(request):
 
     is_ans_correct = selected_city == correct_city
     feedback = (
-        "Correct! You scored 3 points."
+        CORRECT_ANS_FEEDBACK
         if is_ans_correct
-        else f"Incorrect! No points awarded. The correct answer is {correct_city}."
+        else INCORRECT_ANS_FEEDBACK.format(correct_city=correct_city)
     )
 
     # Get the correct destination
@@ -53,6 +49,7 @@ def submit_answer(request):
         profile.increment_score(0)
 
     profile.refresh_from_db()
+
     # Update the session score and games played
     request.session["score"] = profile.score
     request.session["games_played"] = profile.games_played

@@ -22,6 +22,19 @@ class Destination(models.Model):
     def get_random_trivia(self):
         return random.choice(self.trivia)
 
+    @classmethod
+    def get_random_destination(cls):
+        return random.choice(cls.objects.all())
+
+    @classmethod
+    def get_answer_choices(cls, instance):
+        choices = [instance.city] + [
+            d.city
+            for d in random.sample(list(Destination.objects.exclude(id=instance.id)), 3)
+        ]
+        random.shuffle(choices)
+        return choices
+
 
 class Challenge(models.Model):
     inviter = models.ForeignKey(
