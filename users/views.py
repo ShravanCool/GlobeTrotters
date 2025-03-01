@@ -67,4 +67,4 @@ class LogoutView(View):
     def dispatch(self, request, *args, **kwargs):
         logout(request)
         messages.info(request, "You have been logged out.")
-        return redirect("game_view")
+        return redirect("login")
