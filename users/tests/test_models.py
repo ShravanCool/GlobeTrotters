@@ -1,4 +1,5 @@
 from django.test import TestCase
+
 from users.tests.factories import UserFactory, UserProfileFactory
 
 
