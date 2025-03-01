@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django.db import models
 
 
@@ -11,6 +12,10 @@ class UserProfile(models.Model):
         self.score += points
         self.games_played += 1
         self.save()
+
+    def clean(self):
+        if User.objects.filter(email=self.user.email).exists():
+            raise ValidationError({"user": "A user with this email already exists."})
 
     def __str__(self):
         return f"{self.user.username} - Score: {self.score}"
