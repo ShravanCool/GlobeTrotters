@@ -10,33 +10,128 @@
     </ul>
 </div>
 
-<form id="answer-form">
-    <h3>Choose the Destination:</h3>
-    <div class="btn-group-vertical" role="group" style="width: 100%;">
+<form id="answer-form" method="post" action="{% url 'submit_answer' %}" class="mb-5>
+    {% csrf_token %}
+    <label for="answer" class="mb-3 d-block">Select the correct destination:</label>
+    <div class="d-flex flex-column gap-2">
         {% for choice in choices %}
-            <button type="button" class="btn btn-default choice-btn" data-choice="{{ choice }}" style="margin: 5px 0;">{{ choice }}</button>
+            <button type="submit" name="answer" value="{{ choice }}" 
+                    class="btn btn-primary answer-btn">
+                {{ choice }}
+            </button>
         {% endfor %}
     </div>
 </form>
 
-<div class="feedback alert alert-info hidden"></div>
-<div class="score alert alert-success hidden"></div>
+<!-- Feedback Banner -->
+<div id="feedbackBanner" class="feedback-banner hidden" style="margin-top: 30px;">
+    <p id="feedbackMessage" class="m-0"></p>
+    <button id="next-button" class="btn btn-success mt-3 hidden">Next</button>
+</div>
 
-<a href="{% url 'play_again' %}" class="btn btn-primary" style="margin-top: 10px;">Play Again</a>
-
+<!-- Feedback Animation and AJAX Handling -->
 <script>
-$(document).ready(function() {
-    $('.choice-btn').on('click', function() {
-        var selectedCity = $(this).data('choice');
+    $(document).ready(function() {
+        $('#answer-form').on('submit', function(e) {
+            e.preventDefault();
+            var answer = $(e.target).find('button[type=submit][clicked=true]').val();
 
-        $.post('{% url "submit_answer" %}', {
-            selected_city: selectedCity,
-            csrfmiddlewaretoken: '{{ csrf_token }}'
-        }, function(data) {
-            $('.feedback').removeClass('hidden').text(data.feedback);
-            $('.score').removeClass('hidden').text('Score: ' + data.score + ' | Games Played: ' + data.games_played);
+            $.ajax({
+                url: '{% url 'submit_answer' %}',
+                method: 'POST',
+                data: {
+                    'answer': answer,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success: function(data) {
+                    // Update score and games played
+                    $('#score').text(data.score);
+                    $('#gamesPlayed').text(data.games_played);
+
+                    // Display feedback with animation
+                    $('#feedbackMessage').text(data.feedback);
+                    $('#feedbackBanner')
+                        .removeClass('hidden show-feedback correct-feedback incorrect-feedback')
+                        .addClass('show-feedback')
+                        .addClass(data.correct ? 'correct-feedback' : 'incorrect-feedback');
+                    $('#next-button').removeClass('hidden').addClass('fade-in');
+                }
+            });
+        });
+
+        // Button click handling
+        $('button[type=submit]').on('click', function() {
+            $('button[type=submit]').removeAttr('clicked');
+            $(this).attr('clicked', 'true');
+        });
+
+        // Next button to reload the page
+        $('#next-button').on('click', function() {
+            window.location.reload();
         });
     });
-});
 </script>
+
+<!-- Feedback Animation Styles -->
+<style>
+    /* Initial hidden state */
+    .hidden {
+        opacity: 0;
+        transform: scale(0.9);
+        pointer-events: none;
+        transition: all 0.5s ease;
+    }
+
+    /* Shown with animation */
+    .show-feedback {
+        opacity: 1;
+        transform: scale(1.05);
+        pointer-events: auto;
+    }
+
+    /* Feedback banner base styles */
+    .feedback-banner {
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-weight: bold;
+        text-align: center;
+        transition: all 0.5s ease;
+    }
+
+    /* Correct feedback styles */
+    .correct-feedback {
+        background-color: #4CAF50; /* Green */
+        color: white;
+        border: 2px solid #388E3C;
+        box-shadow: 0 4px 8px rgba(0, 128, 0, 0.3);
+    }
+
+    /* Incorrect feedback styles */
+    .incorrect-feedback {
+        background-color: #f44336; /* Red */
+        color: white;
+        border: 2px solid #d32f2f;
+        box-shadow: 0 4px 8px rgba(255, 0, 0, 0.3);
+        animation: shake 0.3s ease;
+    }
+
+    /* Next button animation */
+    #next-button {
+        transition: opacity 0.5s ease, transform 0.3s ease;
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    .fade-in {
+        opacity: 1 !important;
+        transform: translateY(0) !important;
+    }
+
+    /* Shake animation for incorrect feedback */
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        20%, 60% { transform: translateX(-10px); }
+        40%, 80% { transform: translateX(10px); }
+    }
+</style>
+
 {% endblock %}

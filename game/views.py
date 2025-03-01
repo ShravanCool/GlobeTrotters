@@ -20,6 +20,7 @@ def game_view(request):
 
     # Store the correct answer in the session
     request.session["correct_city"] = destination.city
+    request.session.modified = True
 
     context = {
         "clues": destination.clues,  # Show both clues initially
@@ -30,7 +31,7 @@ def game_view(request):
 
 @login_required
 def submit_answer(request):
-    selected_city = request.POST.get("selected_city")
+    selected_city = request.POST.get("answer")
     correct_city = request.session.get("correct_city")
 
     is_ans_correct = selected_city == correct_city
@@ -44,8 +45,14 @@ def submit_answer(request):
     profile, _ = UserProfile.objects.get_or_create(user=request.user)
     if is_ans_correct:
         profile.increment_score(3)
+    else:
+        profile.increment_score(0)
 
     profile.refresh_from_db()
+    # Update the session score and games played
+    request.session["score"] = profile.score
+    request.session["games_played"] = profile.games_played
+    request.session.modified = True
 
     return JsonResponse(
         {
