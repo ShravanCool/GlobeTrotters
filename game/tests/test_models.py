@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from game.models import Challenge, Destination
+from game.models import Destination
 from game.tests.factories import ChallengeFactory, DestinationFactory
 from users.tests.factories import UserFactory
 
@@ -135,10 +135,8 @@ class DestinationModelTest(TestCase):
                 "The Seine River runs through it",
             ],
         )
-        DestinationFactory()
-        DestinationFactory()
-        DestinationFactory()
-        DestinationFactory()
+        for _ in range(4):
+            DestinationFactory()
 
         answer_choices = Destination.get_answer_choices(destination1)
         self.assertIn(destination1.city, answer_choices)

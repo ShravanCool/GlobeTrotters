@@ -24,11 +24,8 @@ class SignupViewTest(TestCase):
         }
 
         # Create some destinations
-        DestinationFactory()
-        DestinationFactory()
-        DestinationFactory()
-        DestinationFactory()
-        DestinationFactory()
+        for _ in range(5):
+            DestinationFactory()
 
     def test_signup_valid(self):
         response = self.client.post(self.url, self.valid_data)
@@ -72,11 +69,8 @@ class CustomLoginViewTest(TestCase):
         self.invalid_data = {"username": "testuser12345", "password": "wrongpassword"}
 
         # Create some destinations
-        DestinationFactory()
-        DestinationFactory()
-        DestinationFactory()
-        DestinationFactory()
-        DestinationFactory()
+        for _ in range(5):
+            DestinationFactory()
 
     def test_login_valid(self):
         response = self.client.post(self.url, self.valid_data)
