@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}Play Globetrotter{% endblock %}
+{% block content %}
+<div class="well">
+    <h3>Clues:</h3>
+    <ul id="clue-list">
+        {% for clue in clues %}
+            <li>{{ clue }}</li>
+        {% endfor %}
+    </ul>
+</div>
+
+<form id="answer-form">
+    <h3>Choose the Destination:</h3>
+    <div class="btn-group-vertical" role="group" style="width: 100%;">
+        {% for choice in choices %}
+            <button type="button" class="btn btn-default choice-btn" data-choice="{{ choice }}" style="margin: 5px 0;">{{ choice }}</button>
+        {% endfor %}
+    </div>
+</form>
+
+<div class="feedback alert alert-info hidden"></div>
+<div class="score alert alert-success hidden"></div>
+
+<a href="{% url 'play_again' %}" class="btn btn-primary" style="margin-top: 10px;">Play Again</a>
+
+<script>
+$(document).ready(function() {
+    $('.choice-btn').on('click', function() {
+        var selectedCity = $(this).data('choice');
+
+        $.post('{% url "submit_answer" %}', {
+            selected_city: selectedCity,
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+        }, function(data) {
+            $('.feedback').removeClass('hidden').text(data.feedback);
+            $('.score').removeClass('hidden').text('Score: ' + data.score + ' | Games Played: ' + data.games_played);
+        });
+    });
+});
+</script>
+{% endblock %}

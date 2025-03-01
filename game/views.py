@@ -1,3 +1,63 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+import random
+from game.models import Destination
+from users.models import UserProfile
 
-# Create your views here.
+
+@login_required
+def game_view(request):
+    # Select a random destination
+    destination = random.choice(Destination.objects.all())
+
+    # Generate multiple-choice options
+    choices = [destination.city] + [
+        d.city
+        for d in random.sample(list(Destination.objects.exclude(id=destination.id)), 3)
+    ]
+    random.shuffle(choices)
+
+    # Store the correct answer in the session
+    request.session["correct_city"] = destination.city
+
+    context = {
+        "clues": destination.clues,  # Show both clues initially
+        "choices": choices,
+    }
+    return render(request, "game.html", context)
+
+
+@login_required
+def submit_answer(request):
+    selected_city = request.POST.get("selected_city")
+    correct_city = request.session.get("correct_city")
+
+    is_ans_correct = selected_city == correct_city
+    feedback = (
+        "Correct! You scored 3 points."
+        if is_ans_correct
+        else "Incorrect! No points awarded."
+    )
+
+    # Get user profile
+    profile, _ = UserProfile.objects.get_or_create(user=request.user)
+    if is_ans_correct:
+        profile.increment_score(3)
+
+    profile.refresh_from_db()
+
+    return JsonResponse(
+        {
+            "correct": is_ans_correct,
+            "feedback": feedback,
+            "score": profile.score,
+            "games_played": profile.games_played,
+        }
+    )
+
+
+@login_required
+def play_again(request):
+    request.session["show_second_clue"] = False
+    return redirect("game_view")
