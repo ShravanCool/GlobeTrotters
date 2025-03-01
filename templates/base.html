@@ -26,6 +26,9 @@
                         <a href="#">Games Played: <span id="games-played">{{ request.session.games_played }}</span></a>
                     </li>
                     <li>
+                        <a href="{% url 'generate_challenge_link' %}">Challenge a Friend</a>
+                    </li>
+                    <li>
                         <a href="{% url 'logout' %}">Logout ({{ user.username }})</a>
                     </li>
                 {% else %}

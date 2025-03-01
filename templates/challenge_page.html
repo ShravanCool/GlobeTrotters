@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-sm p-4 text-center">
+        <h2>{{ challenger_username }} invites you to play Globetrotter!</h2>
+        <p class="mt-3">They currently have a score of <strong>{{ challenger_score }}</strong> points.</p>
+        <a href="{% url 'game_view' %}" class="btn btn-primary mt-4">Start Game</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,8 +1,9 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
+import uuid
 import random
-from game.models import Destination
+from game.models import Destination, Challenge
 from users.models import UserProfile
 
 
@@ -38,7 +39,7 @@ def submit_answer(request):
     feedback = (
         "Correct! You scored 3 points."
         if is_ans_correct
-        else "Incorrect! No points awarded."
+        else f"Incorrect! No points awarded. The correct answer is {correct_city}."
     )
 
     # Get the correct destination
@@ -72,3 +73,28 @@ def submit_answer(request):
 @login_required
 def play_again(request):
     return redirect("game_view")
+
+
+@login_required
+def generate_challenge_link(request):
+    invite_token = str(uuid.uuid4())[:8]
+    Challenge.objects.create(
+        inviter=request.user,
+        invite_token=invite_token,
+    )
+    challenge_link = request.build_absolute_uri(f"/game/challenge/{invite_token}/")
+    return render(request, "challenge_link.html", {"challenge_link": challenge_link})
+
+
+def challenge_view(request, invite_token):
+    challenge = get_object_or_404(Challenge, invite_token=invite_token)
+    challenger_profile = UserProfile.objects.get(user=challenge.inviter)
+
+    return render(
+        request,
+        "challenge_page.html",
+        {
+            "challenger_username": challenge.inviter.username,
+            "challenger_score": challenger_profile.score,
+        },
+    )

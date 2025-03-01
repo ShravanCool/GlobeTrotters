@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-sm p-4">
+        <h2>Share this link with your friends:</h2>
+        <p>
+            <a href="{{ challenge_link }}" class="text-primary">{{ challenge_link }}</a>
+        </p>
+        <button class="btn btn-success" onclick="copyToClipboard('{{ challenge_link }}')">
+            Copy Challenge Link
+        </button>
+    </div>
+</div>
+
+<script>
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text);
+        alert("Link copied to clipboard!");
+    }
+</script>
+{% endblock %}
