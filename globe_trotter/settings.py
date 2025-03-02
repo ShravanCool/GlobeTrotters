@@ -29,7 +29,7 @@ if not SECRET_KEY:
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["globetrotters-production.up.railway.app", "localhost"]
+ALLOWED_HOSTS = ["globetrotters-production.up.railway.app", "127.0.0.1"]
 
 LOGGING = {
     "version": 1,
@@ -171,6 +171,7 @@ LOGOUT_REDIRECT_URL = "game_view"
 
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 COMPRESS_ENABLED = os.environ.get("COMPRESS_ENABLED", False)
 
