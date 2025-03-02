@@ -3,5 +3,5 @@ INCORRECT_ANS_FEEDBACK = (
     "Incorrect! No points awarded. The correct answer is {correct_city}."
 )
 
-CORRECT_ANS_POINTS = 5
+CORRECT_ANS_POINTS = 3
 INCORRECT_ANS_POINTS = 0
