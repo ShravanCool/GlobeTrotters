@@ -38,10 +38,15 @@ Now, install the python dependencies from requirements.txt:
 pip install -r requirements.txt
 ```
 
-Lastly, build the database by making migrations:
+Build the database by making migrations:
 ```
 python manage.py makemigrations
 python manage.py migrate
+```
+
+Finally, to pre-populate the "Destinations" table, run the following management command-
+```
+python manage.py load_destinations
 ```
 
 ## Directions to execute-
