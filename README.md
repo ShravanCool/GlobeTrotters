@@ -1,6 +1,6 @@
 # GlobeTrotters
 This is **GlobeTrotters**, a full-stack web app where users get cryptic clues about a famous place and must guess which destination it refers to. Once they guess, they’ll unlock fun facts, trivia, and surprises about the destination!
-This is deployed iver railways [here](https://globetrotters-production.up.railway.app/accounts/login/#).
+This web-app is deployed over railways [here](https://globetrotters-production.up.railway.app/accounts/login/#).
 
 ## Rules and Regulations-
 
