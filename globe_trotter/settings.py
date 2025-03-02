@@ -178,12 +178,3 @@ COMPRESS_ENABLED = os.environ.get("COMPRESS_ENABLED", False)
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
-
-SECURE_SSL_REDIRECT = True
-# Enforce HTTPS headers
-SECURE_HSTS_SECONDS = 31536000  # 1 year
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
